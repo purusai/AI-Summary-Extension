@@ -1,4 +1,5 @@
-console.log("Content script loaded");
+alert("CONTENT SCRIPT LOADED");
+console.log("CONTENT SCRIPT LOADED");
 function getArticleText() {
     const article = document.querySelector("article");
     if (article) return article.innerText;
