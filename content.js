@@ -10,6 +10,6 @@ function getArticleText() {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if(request.type = "GET_ARTICLE_TEXT") {
         const text = getArticleText();
-        sendResponse({ text });
+        sendResponse({ text })
     }
 });
