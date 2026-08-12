@@ -1,3 +1,4 @@
+console.log("Content script loaded");
 function getArticleText() {
     const article = document.querySelector("article");
     if (article) return article.innerText;
@@ -8,7 +9,7 @@ function getArticleText() {
 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if(request.type = "GET_ARTICLE_TEXT") {
+    if(request.type === "GET_ARTICLE_TEXT") {
         const text = getArticleText();
         sendResponse({ text })
     }
