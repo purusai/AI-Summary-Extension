@@ -1,22 +1,47 @@
 document.getElementById("summarize").addEventListener("click", () => {
-    const result = document.getElementById("result");
-    result.textContent = "Extracting article text...";
+    const resultDiv = document.getElementById("result");
+    const summarytype = document.getElementById("summary-type").value;
 
-    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+
+
+    resultDiv.innerHTML = "<div class='loader'></div>";
+
+    // Get the user's API key
+
+    chrome.storage.sync.get(["geminiApiKey"], ({ geminiApiKey }) => {
+        if (!geminiApiKey) {
+            resultDiv.textContent = "API key not found. Please set it in the options.";
+            return;
+        }
+
+        // Ask content.js for the page text
+          chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
         chrome.tabs.sendMessage(
             tab.id,
             { type: "GET_ARTICLE_TEXT" },
-            (response) => {
-                if (chrome.runtime.lastError) {
-                    console.error(chrome.runtime.lastError);
-                    result.textContent = chrome.runtime.lastError.message;
+            async ({ text }) => {
+               if (!text) {
+                    resultDiv.textContent = "No text found on this page.";
                     return;
                 }
-
-                result.textContent = response?.text
-                    ? response.text.slice(0, 300) + "..."
-                    : "No article text found.";
+                // Send text to Gemini
+                try{
+                    const summary = await getGeminiSummary(text, summarytype, geminiApiKey);
+                    resultDiv.textContent = summary;
+                } catch (error) {
+                    resultDiv.textContent = "Error fetching summary: " + error.message;
+                    return;
+                }
+                
             }
         );
     });
+
+    })    
+
+    
+
+    
+
+   
 });
