@@ -112,10 +112,7 @@ async function getGeminiSummary(rawText, type, apiKey) {
 
 // copy button functionality
 document.getElementById("copy-button").addEventListener("click", () => {
-    const resultDiv = document.getElementById("result");
-    const textToCopy = resultDiv.textContent;
-
-    navigator.clipboard.writeText(textToCopy).then(() => {
-        // Optional: Show a confirmation message
-    });
+    const txt = document.getElementById("result").innerText;
+    if (!txt) return;
+    navigator.clipboard.writeText(txt);
 });
