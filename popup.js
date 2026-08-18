@@ -39,6 +39,19 @@ document.getElementById("summarize").addEventListener("click", () => {
 
     })    
 
+
+
+    async function getGeminiSummary(text, summarytype, apiKey) {
+        const prompt = `Summarize the following text in a ${summarytype} manner:\n\n${text}`;
+        const response = await fetch("https://api.gemini.com/v1/summarize", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({ prompt })
+        });
+
     
 
     
