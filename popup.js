@@ -106,3 +106,16 @@ async function getGeminiSummary(rawText, type, apiKey) {
         "No summary generated."
     );
 }
+
+
+
+
+// copy button functionality
+document.getElementById("copy-button").addEventListener("click", () => {
+    const resultDiv = document.getElementById("result");
+    const textToCopy = resultDiv.textContent;
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        // Optional: Show a confirmation message
+    });
+});
