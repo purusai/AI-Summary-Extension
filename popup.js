@@ -38,11 +38,15 @@ document.getElementById("summarize").addEventListener("click", () => {
     });
 
     })    
+   
+});
 
 
 
-    async function getGeminiSummary(text, summarytype, apiKey) {
-        const prompt = `Summarize the following text in a ${summarytype} manner:\n\n${text}`;
+ async function getGeminiSummary(rawText, type, apiKey) {
+        const max = 2000;
+        const text = rawText.length > max ? rawText.slice(0, max) : rawText;
+        const prompt = `Summarize the following text in a ${type} manner:\n\n${text}`;
         const response = await fetch("https://api.gemini.com/v1/summarize", {
             method: "POST",
             headers: {
@@ -51,10 +55,7 @@ document.getElementById("summarize").addEventListener("click", () => {
             },
             body: JSON.stringify({ prompt })
         });
+        const data = await response.json();
 
-    
-
-    
-
-   
-});
+        return data.summary;
+    }
