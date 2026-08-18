@@ -42,21 +42,42 @@ document.getElementById("summarize").addEventListener("click", () => {
 });
 
 
+async function getGeminiSummary(rawText, type, apiKey) {
+    const max = 20000;
+    const text =
+        rawText.length > max
+            ? rawText.slice(0, max) + "..."
+            : rawText;
 
- async function getGeminiSummary(rawText, type, apiKey) {
-        const max = 20000;
-        const text = rawText.length > max ? rawText.slice(0, max) + "..." : rawText;
-        
+    const promptMap = {
+        brief: `Summarize the following text in a concise manner:\n\n${text}`,
+        detailed: `Provide a detailed summary of the following text:\n\n${text}`,
+        bullet: `Summarize the following text in bullet points:\n\n${text}`
+    };
 
-        const promptMap = {
-            brief:` Summarize the following text in a concise manner:\n\n${text}`,
-            detailed: `Provide a detailed summary of the following text:\n\n${text}`,
-            bullet: `Summarize the following text in bullet points (upto 5-7 bullet points and start each line with "- "):\n\n${text}`
-        };
+    const prompt = promptMap[type] || promptMap.brief;
 
-        const prompt = promptMap[type] || promptMap.brief;
+    const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                contents: [
+                    {
+                        parts: [{ text: prompt }]
+                    }
+                ]
+            })
+        }
+    );
 
-        const res = await fetch(
-            ``
-        )
-    }
+    const data = await response.json();
+
+    return (
+        data.candidates?.[0]?.content?.parts?.[0]?.text ||
+        "No summary generated."
+    );
+}
