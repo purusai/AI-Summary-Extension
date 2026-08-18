@@ -47,4 +47,16 @@ document.getElementById("summarize").addEventListener("click", () => {
         const max = 20000;
         const text = rawText.length > max ? rawText.slice(0, max) + "..." : rawText;
         
+
+        const promptMap = {
+            brief:` Summarize the following text in a concise manner:\n\n${text}`,
+            detailed: `Provide a detailed summary of the following text:\n\n${text}`,
+            bullet: `Summarize the following text in bullet points (upto 5-7 bullet points and start each line with "- "):\n\n${text}`
+        };
+
+        const prompt = promptMap[type] || promptMap.brief;
+
+        const res = await fetch(
+            ``
+        )
     }
